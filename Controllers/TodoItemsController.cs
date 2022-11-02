@@ -25,7 +25,11 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems()
         {
-            return await _context.TodoItems.Where(o => !o.IsDelete)
+            // return await _context.TodoItems.Where(o => !o.IsDelete)
+            //     .Select(x => ItemToDTO(x))
+            //     .ToListAsync();
+            
+            return await _context.TodoItems
                 .Select(x => ItemToDTO(x))
                 .ToListAsync();
         }
@@ -34,7 +38,10 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItemDTO>> GetTodoItem(long id)
         {
-            var todoItem = await _context.TodoItems.Where(o => !o.IsDelete). FirstOrDefaultAsync(o => o.Id == id);
+            //var todoItem = await _context.TodoItems.Where(o => !o.IsDelete). FirstOrDefaultAsync(o => o.Id == id);
+            
+            // removing isdelete filter
+            var todoItem = await _context.TodoItems.FirstOrDefaultAsync(o => o.Id == id);
 
             if (todoItem == null)
             {
@@ -54,8 +61,11 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
                 return BadRequest();
             }
 
-            var todoItem = await _context.TodoItems.Where(o 
-                => !o.IsDelete). FirstOrDefaultAsync(o => o.Id == id);
+            
+            //var todoItem = await _context.TodoItems.Where(o 
+           //     => !o.IsDelete). FirstOrDefaultAsync(o => o.Id == id);
+            
+            var todoItem = await _context.TodoItems. FirstOrDefaultAsync(o => o.Id == id);
             if (todoItem == null)
             {
                 return NotFound();
@@ -100,7 +110,9 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodoItem(long id)
         {
-            var todoItem = await _context.TodoItems.Where(o => !o.IsDelete). FirstOrDefaultAsync(o => o.Id == id);
+            //var todoItem = await _context.TodoItems.Where(o => !o.IsDelete). FirstOrDefaultAsync(o => o.Id == id);
+           
+            var todoItem = await _context.TodoItems. FirstOrDefaultAsync(o => o.Id == id);
 
             if (todoItem == null)
             {
@@ -116,7 +128,9 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
 
         private bool TodoItemExists(long id)
         {
-            return _context.TodoItems.Any(e => e.Id == id && !e.IsDelete);
+            //return _context.TodoItems.Any(e => e.Id == id && !e.IsDelete);
+            
+            return _context.TodoItems.Any(e => e.Id == id);
         }
 
         private static TodoItemDTO ItemToDTO(TodoItem todoItem) =>
