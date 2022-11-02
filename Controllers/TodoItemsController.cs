@@ -28,7 +28,7 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
             // return await _context.TodoItems.Where(o => !o.IsDelete)
             //     .Select(x => ItemToDTO(x))
             //     .ToListAsync();
-            
+
             return await _context.TodoItems
                 .Select(x => ItemToDTO(x))
                 .ToListAsync();
@@ -39,7 +39,7 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
         public async Task<ActionResult<TodoItemDTO>> GetTodoItem(long id)
         {
             //var todoItem = await _context.TodoItems.Where(o => !o.IsDelete). FirstOrDefaultAsync(o => o.Id == id);
-            
+
             // removing isdelete filter
             var todoItem = await _context.TodoItems.FirstOrDefaultAsync(o => o.Id == id);
 
@@ -61,11 +61,11 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
                 return BadRequest();
             }
 
-            
+
             //var todoItem = await _context.TodoItems.Where(o 
-           //     => !o.IsDelete). FirstOrDefaultAsync(o => o.Id == id);
-            
-            var todoItem = await _context.TodoItems. FirstOrDefaultAsync(o => o.Id == id);
+            //     => !o.IsDelete). FirstOrDefaultAsync(o => o.Id == id);
+
+            var todoItem = await _context.TodoItems.FirstOrDefaultAsync(o => o.Id == id);
             if (todoItem == null)
             {
                 return NotFound();
@@ -111,8 +111,8 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
         public async Task<IActionResult> DeleteTodoItem(long id)
         {
             //var todoItem = await _context.TodoItems.Where(o => !o.IsDelete). FirstOrDefaultAsync(o => o.Id == id);
-           
-            var todoItem = await _context.TodoItems. FirstOrDefaultAsync(o => o.Id == id);
+
+            var todoItem = await _context.TodoItems.FirstOrDefaultAsync(o => o.Id == id);
 
             if (todoItem == null)
             {
@@ -129,7 +129,7 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
         private bool TodoItemExists(long id)
         {
             //return _context.TodoItems.Any(e => e.Id == id && !e.IsDelete);
-            
+
             return _context.TodoItems.Any(e => e.Id == id);
         }
 
@@ -140,7 +140,7 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
                 Name = todoItem.Name,
                 IsComplete = todoItem.IsComplete
             };
-        
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetAllTodoItemsWithDeleted()
         {
@@ -148,6 +148,31 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
                 .IgnoreQueryFilters() // Ignore query filter
                 .Select(x => ItemToDTO(x))
                 .ToListAsync();
+        }
+
+        /// <summary>
+        /// Do not use explicitly is delete false values 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TodoItemDTO>>> Do_Not_use_Explicite_Filter_With_Query_Filter()
+        {
+            
+            /// This is wrong. DONOT use like explicitly 
+            var result = await _context.TodoItems
+                .Where(o => o.IsDelete)// Ignore query filter
+                .Select(x => ItemToDTO(x))
+                .ToListAsync();
+            
+            
+            // If you want use explicitly, First USE IgnoreQueryFilters(). Then use where filter in the query.
+            result =  await _context.TodoItems
+                .IgnoreQueryFilters()
+                .Where(o => o.IsDelete)// Ignore query filter
+                .Select(x => ItemToDTO(x))
+                .ToListAsync();
+
+            return result;
         }
     }
 }
