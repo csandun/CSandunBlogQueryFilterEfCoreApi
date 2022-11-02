@@ -140,5 +140,14 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
                 Name = todoItem.Name,
                 IsComplete = todoItem.IsComplete
             };
+        
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetAllTodoItemsWithDeleted()
+        {
+            return await _context.TodoItems
+                .IgnoreQueryFilters() // Ignore query filter
+                .Select(x => ItemToDTO(x))
+                .ToListAsync();
+        }
     }
 }
