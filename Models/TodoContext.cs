@@ -15,8 +15,8 @@ public class TodoContext : DbContext
     {
         // Query Filter
         modelBuilder.Entity<TodoItem>().HasQueryFilter(o => !o.IsDelete);
-        
-        
+
+
         modelBuilder.Entity<TodoItem>()
             .Property(o => o.Name)
             .IsRequired();
@@ -41,7 +41,8 @@ public class TodoContext : DbContext
                 {
                     Id = 3,
                     Name = "Deleted todo item",
-                    IsComplete = true
+                    IsComplete = true,
+                    IsDelete = true
                 });
     }
 }
