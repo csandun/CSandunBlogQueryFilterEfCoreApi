@@ -14,7 +14,7 @@ public class TodoContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Query Filter
-        modelBuilder.Entity<TodoItem>().HasQueryFilter(o => o.IsDelete);
+        modelBuilder.Entity<TodoItem>().HasQueryFilter(o => !o.IsDelete);
         
         
         modelBuilder.Entity<TodoItem>()
