@@ -151,7 +151,7 @@ namespace CSandunBlogQueryFilterEfCoreApi.Controllers
         }
 
         /// <summary>
-        /// Do not use explicitly is delete false values 
+        /// Do not use explicitly without IgnoreQueryFilters()
         /// </summary>
         /// <returns></returns>
         [HttpGet]
